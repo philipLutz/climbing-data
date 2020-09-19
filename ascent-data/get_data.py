@@ -1,15 +1,18 @@
-#import pandas as pd
+"""
+HTML to CSV
+
+We are going to parse the raw HTML from 8a.nu, and then convert the logged
+ascents into CSV files. We are separating routes and boulders.
+"""
+
 from bs4 import BeautifulSoup
 
-soup = BeautifulSoup(open("/Users/philipandrewlutz/climbing-data/ascent-data/boulders.html"), "html.parser")
-#print(soup.prettify())
-#print(soup.find("table", "user-ascents"))
+# Parse saved HTML file
+soup = BeautifulSoup(
+    open("/Users/philipandrewlutz/climbing-data/ascent-data/boulders.html"),
+    "html.parser")
 
 ascent_table = soup.find("table", "user-ascents")
-#print(type(ascent_table))
-#for child in ascent_table.contents:
-    #print(child)
-#print(ascent_table.thead.find_all("th"))
 
 headers = []
 for header in ascent_table.thead.find_all("th"):
