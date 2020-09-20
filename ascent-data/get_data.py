@@ -40,7 +40,7 @@ def parse_file(path):
             if not crag_untrimmed.isalpha():
                 split_index = len(crag_untrimmed)
                 for index, char in enumerate(crag_untrimmed):
-                    if not char.isalpha() and not char.isspace():
+                    if char == '(':
                         split_index = index - 1
                         break
                 crag = crag_untrimmed[:split_index]
