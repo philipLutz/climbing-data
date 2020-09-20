@@ -31,7 +31,13 @@ def parse_file(path):
     #         headers.append(header.text.strip())
     
     # create dictionaries for each ascent
-    
+    ascents = []
+    for grade_category in ascent_table.find_all("tbody"):
+        grade = grade_category.find(class_="sub-header").th.text.strip()
+        print(grade)
+        # if class_="odd"
+        
+        # if class_="even"
     
     
     # Write to CSV file
@@ -48,8 +54,7 @@ def parse_file(path):
             "comment": "Sick!"
         })
         
-    print("Finished write to:")
-    print("    " + csv_path + "\n")
+    print("Finished write to:\n    " + csv_path + "\n")
     
 
 for path in file_paths:
