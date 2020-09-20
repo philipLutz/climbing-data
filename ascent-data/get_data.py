@@ -1,13 +1,15 @@
 """
 HTML to CSV
 
-We are going to parse the raw HTML from 8a.nu, and then convert the logged
-ascents into CSV files. We are separating routes and boulders.
+Parses the raw HTML from 8a.nu and then converts the logged
+ascents into CSV files. Navigate to your logbook and load all ascents. 
+Save the current pages as HTML files to use for this script.
 """
 
 import csv
 from bs4 import BeautifulSoup
 
+# Separate files for boulders and routes
 file_paths = [
     "/Users/philipandrewlutz/climbing-data/ascent-data/boulders.html",
     "/Users/philipandrewlutz/climbing-data/ascent-data/routes.html"
@@ -15,8 +17,9 @@ file_paths = [
 
 def parse_file(path):
     """
-    Creates CSV file of ascents from 8a.nu HTML
+    Creates CSV file of ascents from 8a.nu HTML file
     """
+    # Format the following variables accordingly to your machine and files
     reference_string = path[50:]
     reference_string = reference_string.split('.')[0]
     csv_path = ("/Users/philipandrewlutz/climbing-data/ascent-data/ascents_" 
@@ -25,7 +28,7 @@ def parse_file(path):
     soup = BeautifulSoup(open(path),"html.parser")
     ascent_table = soup.find("table", "user-ascents")
     
-    # create dictionaries for each ascent
+    # Create dictionaries for each ascent
     ascents = []
     for grade_category in ascent_table.find_all("tbody"):
         grade = grade_category.find(class_="sub-header").th.text.strip()
@@ -64,7 +67,7 @@ def parse_file(path):
             }
             ascents.append(ascent)
         
-    # Write to CSV file
+    # Write ascents to CSV file
     with open(csv_path, 'w', newline='') as csvfile:
         fieldnames = ["NAME", "CRAG", "DATE", "GRADE", "STYLE", "COMMENT"]
         writer = csv.DictWriter(csvfile, delimiter=',', fieldnames=fieldnames)
