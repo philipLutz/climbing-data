@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 file_paths = [
     "/Users/philipandrewlutz/climbing-data/ascent-data/boulders.html",
-    #"/Users/philipandrewlutz/climbing-data/ascent-data/routes.html"
+    "/Users/philipandrewlutz/climbing-data/ascent-data/routes.html"
 ]
 
 def parse_file(path):
@@ -24,38 +24,49 @@ def parse_file(path):
     
     soup = BeautifulSoup(open(path),"html.parser")
     ascent_table = soup.find("table", "user-ascents")
-
-    #headers = []
-    # for header in ascent_table.thead.find_all("th"):
-    #     if header.text:
-    #         headers.append(header.text.strip())
     
     # create dictionaries for each ascent
     ascents = []
     for grade_category in ascent_table.find_all("tbody"):
         grade = grade_category.find(class_="sub-header").th.text.strip()
-        print(grade)
-        # if class_="odd"
+        for item in grade_category.find_all(class_="col-name"):
+            item_parts = [
+                element for element in item.parent.contents if element != ' '
+            ]
+            
+            name = item_parts[1].contents[0].text.strip().title()
+            crag_untrimmed = item_parts[2].text.strip().split('\n')[0]
+            crag = ""
+            if not crag_untrimmed.isalpha():
+                split_index = len(crag_untrimmed)
+                for index, char in enumerate(crag_untrimmed):
+                    if not char.isalpha() and not char.isspace():
+                        split_index = index - 1
+                        break
+                crag = crag_untrimmed[:split_index]
+            else:
+                crag = crag_untrimmed
+            date = item_parts[3].text.strip()
+            comment = item_parts[4].text.strip()
+                
+            ascent = {
+                "name": name,
+                "crag": crag,
+                "date": date,
+                "grade": grade,
+                "comment": comment
+            }
+            ascents.append(ascent)
         
-        # if class_="even"
-    
-    
     # Write to CSV file
     with open(csv_path, 'w', newline='') as csvfile:
         fieldnames = ["name", "crag", "date", "grade", "comment"]
         writer = csv.DictWriter(csvfile, delimiter=',', fieldnames=fieldnames)
-
         writer.writeheader()
-        writer.writerow({
-            "name": "Mandala",
-            "crag": "Bishop",
-            "date": "11/8/2021",
-            "grade": "8A+",
-            "comment": "Sick!"
-        })
+        for ascent in ascents:
+            writer.writerow(ascent)
         
     print("Finished write to:\n    " + csv_path + "\n")
-    
 
 for path in file_paths:
     parse_file(path)
