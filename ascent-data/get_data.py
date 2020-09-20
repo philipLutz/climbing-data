@@ -33,7 +33,7 @@ def parse_file(path):
             item_parts = [
                 element for element in item.parent.contents if element != ' '
             ]
-            
+            style = item_parts[0].i.get('title').title()
             name = item_parts[1].contents[0].text.strip().title()
             crag_untrimmed = item_parts[2].text.strip().split('\n')[0]
             crag = ""
@@ -55,22 +55,23 @@ def parse_file(path):
             comment = item_parts[4].text.strip()
                 
             ascent = {
-                "name": name,
-                "crag": crag,
-                "date": date,
-                "grade": grade,
-                "comment": comment
+                "NAME": name,
+                "CRAG": crag,
+                "DATE": date,
+                "GRADE": grade,
+                "STYLE": style,
+                "COMMENT": comment
             }
             ascents.append(ascent)
         
     # Write to CSV file
     with open(csv_path, 'w', newline='') as csvfile:
-        fieldnames = ["name", "crag", "date", "grade", "comment"]
+        fieldnames = ["NAME", "CRAG", "DATE", "GRADE", "STYLE", "COMMENT"]
         writer = csv.DictWriter(csvfile, delimiter=',', fieldnames=fieldnames)
         writer.writeheader()
         for ascent in ascents:
             writer.writerow(ascent)
-        
+    
     print("Finished write to:\n    " + csv_path + "\n")
 
 for path in file_paths:
