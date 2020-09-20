@@ -46,6 +46,11 @@ def parse_file(path):
                 crag = crag_untrimmed[:split_index]
             else:
                 crag = crag_untrimmed
+                
+            sub_crag = item_parts[2].contents[2].text.strip().title()
+            if crag != sub_crag:
+                crag = crag + "/" + sub_crag
+            
             date = item_parts[3].text.strip()
             comment = item_parts[4].text.strip()
                 
